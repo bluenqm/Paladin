@@ -1,0 +1,47 @@
+{% extends "admin/admin_base.html" %}
+{% load static %}
+{% block content-area %}
+
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title"> Annotators </p>
+    </header>
+
+    <!-- Display list of User of this project -->
+    <div class="card-content">
+        <table class="table is-fullwidth is-hoverable">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Docs per session</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for u in object_list %}
+            <tr>
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <td><div class="column is-4 mb0"><label>{{ u.id }}</label></div></td>
+                    <td><div class="column is-10 mb0"><label>{{ u.username }}</label></div></td>
+                    <td><div class="column is-10 mb0"><label>{{ u.profile.user_role }}</label></div></td>
+                    <td>
+                        <div class="field is-horizontal">
+                            <div class="column is-5 mb0">
+                                <input class="input" id="doc_per_session" type="number" style="text-align: right;" value="{{ u.profile.doc_per_session }}">
+                            </div>
+                            <div class="column is-3 mb0">
+                                <input class="button is-primary" type="submit" value="Save">
+                            </div>
+                        </div>
+                    </td>
+                </form>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

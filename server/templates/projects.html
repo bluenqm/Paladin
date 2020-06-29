@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<head>
+    <title>Paladin</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+
+    <!-- For event dropdown -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
+
+</head>
+
+<div id="projects_root" v-cloak>
+
+    <!-- Modal card for creating project. -->
+    <div class="modal" :class="{ 'is-active': isActive }">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Create Project</p>
+                <button class="delete" aria-label="close" @click="isActive=!isActive"></button>
+            </header>
+            <form method="post">
+                {% csrf_token %}
+                <section class="modal-card-body">
+                    {% for hidden_field in form.hidden_fields %}
+                        {{ hidden_field }}
+                    {% endfor %}
+                    {% for field in form.visible_fields %}
+                        <div class="field">
+                            {{ field.label_tag }}
+                            <div class="control">
+                                {% render_field field class="input select-height" %}
+                            </div>
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">
+                                    {{ field.help_text }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </section>
+                <footer class="modal-card-foot pt20 pb20 pr20 pl20 has-background-white-ter">
+                    <button class="button is-primary">Create</button>
+                    <button class="button" @click="isActive=!isActive">Cancel</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal card for deleting project. -->
+    <div class="modal" :class="{ 'is-active': isDelete }">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Delete Project</p>
+                <button class="delete" aria-label="close" @click="isDelete=!isDelete"></button>
+            </header>
+            <section class="modal-card-body">
+                Are you sure you want to delete project?
+            </section>
+            <footer class="modal-card-foot pt20 pb20 pr20 pl20 has-background-white-ter">
+                <button class="button is-danger" @click="deleteProject()">Delete</button>
+                <button class="button" @click="isDelete=!isDelete">Cancel</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Creating a project button -->
+    {% if user.is_superuser %}
+        <button class="button is-primary" @click="isActive=!isActive">Create Project</button>
+    {% endif %}
+
+    <!-- Modal card for displaying projects -->
+    <section class="hero">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-10 is-offset-1">
+                    <div class="card events-card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                [[ items.length ]] Projects
+                            </p>
+                        </header>
+                        <div class="card-table">
+                            <div class="content">
+                                <table class="table is-fullwidth">
+                                    <tbody>
+                                        <tr v-for="project in selectedProjects">
+                                            <td class="pl15r">
+                                                <div class="thumbnail-wrapper is-vertical">
+                                                    <img class="project-thumbnail" v-bind:src="project.image">
+                                                </div>
+                                                <div class="dataset-item__main is-vertical">
+                                                    <div class="dataset-item__main-title">
+                                                        <div class="dataset-item__main-title-link dataset-item__link">
+                                                            <a v-bind:href="'/projects/' + project.id" class="has-text-black">[[ project.name ]]</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="dataset-item__main-subtitle">
+                                                        [[ project.description ]]
+                                                    </div>
+                                                    <div class="dataset-item__main-info">
+                                                        <span class="dataset-item__main-update">updated <span>[[ getDaysAgo(project.updated_at) ]] days ago</span></span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="is-vertical"><span class="tag is-normal">[[ project.project_type ]]</span></td>
+                                            {% if user.is_superuser %}
+                                            <td class="is-vertical"><a v-bind:href="'/projects/' + project.id + '/docs'">Edit</a></td>
+                                            <td class="is-vertical"><a class="has-text-danger" @click="setProject(project)">Delete</a></td>
+                                            {% endif %}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'bundle/projects.js' %}"></script>
+{% endblock %}

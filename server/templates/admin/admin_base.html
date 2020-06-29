@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+<link rel="stylesheet" href="{% static '/css/bulma-tooltip.min.css' %}">
+<link rel="stylesheet" href="{% static '/css/bulma-slider.min.css' %}">
+{% endblock %}
+
+{% block navigation %}
+<a class="navbar-item" href="{% url 'annotation' view.kwargs.project_id %}">
+    <span class="icon">
+        <i class="fas fa-user-edit"></i>
+    </span>
+    <b>Annotate Data</b>
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="columns mr0" id="mail-app" v-cloak>
+    <aside class="column is-2 aside">
+        <div>
+            <div class="main">
+                <a href="{% url 'dataset' view.kwargs.project_id %}" class="item">
+                    <span class="icon"><i class="fa fa-database"></i></span>
+                    <span class="name">Dataset</span>
+                </a>
+                <a href="{% url 'seed' view.kwargs.project_id %}" class="item">
+                    <span class="icon"><i class="fa fa-coins"></i></span>
+                    <span class="name">Seed Dataset</span>
+                </a>
+                <a href="{% url 'label-management' view.kwargs.project_id %}" class="item">
+                    <span class="icon"><i class="fa fa-tag"></i></span>
+                    <span class="name">Labels</span>
+                </a>
+                <a href="{% url 'stats' view.kwargs.project_id %}" class="item">
+                    <span class="icon">
+            <i class="fas fa-chart-bar"></i>
+          </span>
+                    <span class="name">Statistics</span>
+                </a>
+                <a href="{% url 'setting' view.kwargs.project_id %}" class="item">
+                    <span class="icon">
+            <i class="fas fa-sliders-h"></i>
+          </span>
+                    <span class="name">Settings</span>
+                </a>
+                <a href="{% url 'profile' view.kwargs.project_id %}" class="item">
+                    <span class="icon">
+            <i class="fas fa-address-card"></i>
+          </span>
+                    <span class="name">Annotators</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+    <div class="column is-10 messages hero is-fullheight" id="message-feed">
+        {% if messages %}
+        <div>
+            <article class='message is-danger'>
+                <div class='message-body'>
+                    <ul>
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </article>
+        </div>
+        {% endif %}
+        {% block content-area %}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}

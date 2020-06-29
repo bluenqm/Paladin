@@ -1,0 +1,102 @@
+{% extends "admin/admin_base.html" %}
+{% load static %}
+{% block content-area %}
+
+<div class="card">
+    <!-- Title -->
+    <header class="card-header">
+        <p class="card-header-title"> Settings </p>
+    </header>
+
+    <div class="card-content">
+        <div class="content">
+            <!-- Active Learning Strategy -->
+            <div class="field is-horizontal">
+                <label class="label column is-3 mb0">Active Learning Strategy</label>
+                <div class="control column is-6">
+                    <div class="select is-fullwidth">
+                        <select v-model="active_learning_strategy">
+                            <option v-for="option in active_learning_options" v-bind:value="option.id"> [[ option.name ]] </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proactive Learning Strategy -->
+            <div class="field is-horizontal">
+                <label class="label column is-3 mb0">Proactive Learning Strategy</label>
+                <div class="control column is-6">
+                    <div class="select is-fullwidth">
+                        <select v-model="proactive_learning_strategy">
+                            <option v-for="poption in proactive_learning_options" v-bind:value="poption.id"> [[ poption.name ]] </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Allocate new batch or wait -->
+            <div class="field is-horizontal">
+                <label class="label column is-3 mb0">Allocate new batch</label>
+                <div class="control column is-6">
+                    <div class="select is-fullwidth">
+                        <select v-model="allocate_new_batch">
+                            <option v-for="aoption in allocate_new_batch_options" v-bind:value="aoption.id"> [[ aoption.name ]] </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sampling threshold -->
+            <div class="field is-horizontal">
+                <label class="label column is-3 mb0" data-tooltip="Only select samples that have system's prediction scores bigger than the threshold">Sampling threshold</label>
+                <div class="control column is-6">
+                    <input v-model="sampling_threshold" class="slider is-fullwidth is-success has-output" step="0.1" min="0" max="1.0" value="0.5" type="range">
+                    <output for="sliderWithValue">[[ sampling_threshold ]]</output>
+                </div>
+            </div>
+
+            <!-- Proficiency threshold -->
+            <div class="field is-horizontal">
+                <label class="label column is-3 mb0" data-tooltip="Only select annotators that have proficiency scores bigger than the threshold">Proficiency threshold</label>
+                <div class="control column is-6">
+                    <input v-model="proficiency_threshold" class="slider is-fullwidth is-success has-output" step="0.1" min="0" max="1.0" value="0.5" type="range">
+                    <output for="sliderWithValue">[[ proficiency_threshold ]]</output>
+                </div>
+            </div>
+
+            <!-- Steps before retraining -->
+            <div class="field is-horizontal">
+                <label class="label column is-3 mb0" data-tooltip="How many annotations needed before system retraining">Steps before Retraining</label>
+                <div class="control column is-6">
+                    <input v-model="steps_before_retraining" class="slider is-fullwidth is-info has-output" step="5" min="10" max="100" value="50" type="range">
+                    <output for="sliderWithValue">[[ steps_before_retraining ]]</output>
+                </div>
+            </div>
+
+            <!-- Samples per session -->
+            <div class="field is-horizontal">
+                <label class="label column is-3 mb0" data-tooltip="How many samples each annotator needs to finish for each session">Samples per Session</label>
+                <div class="control column is-6">
+                    <input v-model="samples_per_session" class="slider is-fullwidth is-info has-output" step="5" min="10" max="100" value="50" type="range">
+                    <output for="sliderWithValue">[[ samples_per_session ]]</output>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-primary" @click="save()">Save</button>
+                </div>
+                <div class="control">
+                    <button class="button" @click="reset()">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'bundle/setting.js' %}"></script>
+{% endblock %}

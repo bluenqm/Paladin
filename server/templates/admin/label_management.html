@@ -1,0 +1,108 @@
+{% extends "admin/admin_base.html" %}
+{% load static %}
+{% block content-area %}
+
+<div class="card">
+    <!-- Title -->
+    <header class="card-header">
+        <p class="card-header-title"> Labels </p>
+    </header>
+
+    <div class="card-content">
+        <div class="content">
+            <!-- Current Labels -->
+            <div class="field is-horizontal">
+                <label class="label column is-3 mb0">Current Labels</label>
+                <div class="control column is-6">
+                    <div class="field is-grouped is-grouped-multiline">
+                        <div class="control" v-for="label in labels">
+                            <div class="tags has-addons has-text-weight-bold">
+                                <span v-if="label" class="tag is-medium"
+                                   v-bind:style="{ color: label.text_color, backgroundColor: label.background_color }">
+                                    <button class="delete is-small tweaked-margin" @click="removeLabel(label)"></button>
+                                    [[ label.text ]]
+                                </span>
+                                <span class="tag is-medium"><kbd>[[ label.shortcut ]]</kbd></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr/>
+
+            <!-- Error handling -->
+            <article v-if="error_message" class="message is-danger">
+                <div class="message-header">
+                    <p>Error</p>
+                    <button class="delete" aria-label="delete" @click="reset()"></button>
+                </div>
+                <div class="message-body">
+                    [[ error_message ]]
+                </div>
+            </article>
+
+            <!-- Preview of new Label -->
+            <div class="field is-horizontal">
+                <label class="label column is-3 mb0">Preview</label>
+                <div class="control column is-6">
+                    <div class="tags has-addons has-text-weight-bold">
+                        <a class="tag is-medium"
+                           v-bind:style="{ color: textColor, backgroundColor: backgroundColor }">
+                            [[ labelText ]]
+                        </a>
+                        <span class="tag is-medium"><kbd>[[ combineKeys ]]</kbd></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New label name and shortcut-->
+            <div class="field is-horizontal">
+                <div class="column is-3 mb0">
+                    <label class="label mb0">Label Name</label>
+                </div>
+                <div class="control column is-4">
+                    <input class="input" type="text" placeholder="New label text here" v-model="labelText">
+                </div>
+                <div class="control column is-2">
+                    <div class="select is-fullwidth">
+                        <select v-model="selectedKey">
+                            <option disabled value="">Shortcut</option>
+                            {% for ch in 'abcdefghijklmnopqrstuvwxyz' %}
+                                <option>{{ ch }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New label colors -->
+            <div class="field is-horizontal">
+                <div class="column is-3 mb0">
+                    <label class="label mb0">Colors</label>
+                </div>
+                <div class="control column is-4">
+                    <input class="input" type="color" v-model="backgroundColor" data-tooltip="Card background color">
+                </div>
+                <div class="control column is-2">
+                    <input class="input" type="color" v-model="textColor" data-tooltip="Text color">
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-primary" @click="addLabel()">Add label</button>
+                </div>
+                <div class="control">
+                    <button class="button" @click="reset()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block footer %}
+    <script src="{% static 'bundle/label_management.js' %}"></script>
+{% endblock %}
