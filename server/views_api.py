@@ -73,7 +73,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
     def init_learning(self):  # Proof of concept
         print('Called from init_learning')
-        project = self.kwargs['project_id']
+        project = get_object_or_404(Project, pk=self.kwargs['project_id'])
         project.start_new_batch()
 
     def get_queryset(self):
