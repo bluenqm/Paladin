@@ -2,8 +2,10 @@
 
 ## Online Demo
 Online demo version here: http://130.88.110.27:8000/projects/
-
 Access using minh/nqminhtest
+
+A short instruction video here: https://youtu.be/PdOSHE7ubJM
+
 
 ## System Requirements
 Paladin needs to use nVidia GPU for training models. You need to install CUDA 10.1.
