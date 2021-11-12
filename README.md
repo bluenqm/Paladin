@@ -1,9 +1,6 @@
 # Paladin
 
-## Online Demo
-Online demo version here: http://130.88.110.27:8000/projects/
-Access using minh/nqminhtest
-
+## Demo
 A short instruction video here: https://youtu.be/PdOSHE7ubJM
 
 
